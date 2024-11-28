@@ -3,6 +3,7 @@ package com.example._6.Config;
 import com.example._6.JWT.JWTFilter;
 import com.example._6.JWT.JWTUtil;
 import com.example._6.JWT.LoginFilter;
+import com.example._6.Repository.RefreshRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,9 +28,12 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration ,  JWTUtil jwtUtil) {
+    private final RefreshRepository refreshRepository;
+
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration ,  JWTUtil jwtUtil , RefreshRepository refreshRepository) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
+        this.refreshRepository = refreshRepository;
     }
 
     @Bean
@@ -67,13 +71,15 @@ public class SecurityConfig {
 
         http.httpBasic((auth) -> auth.disable());
 
-        http.authorizeHttpRequests((auth) -> auth.requestMatchers("/login", "/" , "join").permitAll()
+        http.authorizeHttpRequests((auth) -> auth
+                .requestMatchers("/login", "/" , "join").permitAll()
                 .requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers("/reissue").permitAll()
                 .anyRequest().authenticated());
 
         http.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
-        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration) ,jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration) ,jwtUtil , refreshRepository), UsernamePasswordAuthenticationFilter.class);
 
 
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
