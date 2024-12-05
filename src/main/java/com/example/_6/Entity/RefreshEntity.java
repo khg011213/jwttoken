@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Entity
 @Getter
 @Setter
-public class RefeshEntity {
+public class RefreshEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

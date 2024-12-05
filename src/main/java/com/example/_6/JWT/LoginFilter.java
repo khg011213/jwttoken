@@ -1,7 +1,6 @@
 package com.example._6.JWT;
 
-import com.example._6.DTO.CustumUserDetails;
-import com.example._6.Entity.RefeshEntity;
+import com.example._6.Entity.RefreshEntity;
 import com.example._6.Repository.RefreshRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
@@ -71,11 +70,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private void addRefreshEntity(String username, String refresh, Long expiredMs){
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
-        RefeshEntity refeshEntity = new RefeshEntity();
-        refeshEntity.setUsername(username);
-        refeshEntity.setRefresh(refresh);
-        refeshEntity.setExpiration(date.toString());
+        RefreshEntity refreshEntity = new RefreshEntity();
+        refreshEntity.setUsername(username);
+        refreshEntity.setRefresh(refresh);
+        refreshEntity.setExpiration(date.toString());
 
-        refreshRepository.save(refeshEntity);
+        refreshRepository.save(refreshEntity);
     }
 }

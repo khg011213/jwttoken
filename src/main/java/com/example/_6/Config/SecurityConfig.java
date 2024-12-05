@@ -1,5 +1,6 @@
 package com.example._6.Config;
 
+import com.example._6.JWT.CustomLogoutFilter;
 import com.example._6.JWT.JWTFilter;
 import com.example._6.JWT.JWTUtil;
 import com.example._6.JWT.LoginFilter;
@@ -81,6 +82,7 @@ public class SecurityConfig {
 
         http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration) ,jwtUtil , refreshRepository), UsernamePasswordAuthenticationFilter.class);
 
+        http.addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LoginFilter.class);
 
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
